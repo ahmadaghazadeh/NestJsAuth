@@ -11,6 +11,8 @@
     7. **jwt** is empty or null throw JWTNotAllowBeNullException
     8. **jwt** is duplicate throw JWTTokenDuplicateException
     9. **jwt** retrieve
+
+* See All exception 
    
  
 
