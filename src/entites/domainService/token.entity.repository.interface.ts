@@ -1,4 +1,4 @@
-import { TokenEntity } from '../pgsql/entities/token.entity';
+import { TokenEntity } from '../token.entity';
 
 export interface ITokenEntityRepository {
   isDuplicateDeviceNameUserID(

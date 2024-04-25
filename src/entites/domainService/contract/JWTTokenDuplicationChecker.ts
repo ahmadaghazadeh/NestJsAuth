@@ -1,6 +1,6 @@
 import { IJWTTokenDuplicationChecker } from './IJWTTokenDuplicationChecker';
 import { Inject, Injectable } from '@nestjs/common';
-import { ITokenEntityRepository } from '../../../providers/token.entity.repository.interface';
+import { ITokenEntityRepository } from '../token.entity.repository.interface';
 
 @Injectable()
 export class JWTTokenDuplicationChecker implements IJWTTokenDuplicationChecker {

@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { AuthService } from './application/service/auth.service';
+import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import dataSource, { dataSourceOptions } from './db/data-source';
-import { TokenEntity } from './application/database/pgsql/entities/token.entity';
+import dataSource, { dataSourceOptions } from './other/db/data-source';
+import { TokenEntity } from './entites/token.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
+import { jwtConstants } from './other/constants';
 import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './filtters/http-exception.filter';
+import { HttpExceptionFilter } from './other/filtters/http-exception.filter';
 import { DataSource, Repository } from 'typeorm';
-import { ITokenEntityRepository } from './application/database/providers/token.entity.repository.interface';
-import { TokenEntityRepository } from './application/database/pgsql/services/token.entity.repository';
-import { IJWTTokenDuplicationChecker } from './application/database/pgsql/entities/domainService/IJWTTokenDuplicationChecker';
-import { JWTTokenDuplicationChecker } from './application/database/pgsql/entities/domainService/JWTTokenDuplicationChecker';
-import { ITokenDeviceNameUserIdDuplicationChecker } from './application/database/pgsql/entities/domainService/ITokenDeviceNameUserIdDuplicationChecker';
-import { TokenDeviceNameUserIdDuplicationChecker } from './application/database/pgsql/entities/domainService/TokenDeviceNameUserIdDuplicationChecker';
-import { CreateTokenRequest } from './application/service/dto/create-token-request';
+import { ITokenEntityRepository } from './entites/domainService/token.entity.repository.interface';
+import { TokenEntityRepository } from './infrastructure/token.entity.repository';
+import { IJWTTokenDuplicationChecker } from './entites/domainService/contract/IJWTTokenDuplicationChecker';
+import { JWTTokenDuplicationChecker } from './entites/domainService/contract/JWTTokenDuplicationChecker';
+import { ITokenDeviceNameUserIdDuplicationChecker } from './entites/domainService/contract/ITokenDeviceNameUserIdDuplicationChecker';
+import { TokenDeviceNameUserIdDuplicationChecker } from './entites/domainService/TokenDeviceNameUserIdDuplicationChecker';
+import { CreateTokenRequest } from './dto/create-token-request';
 import { INestApplication } from '@nestjs/common';
 
 describe('AuthController', () => {

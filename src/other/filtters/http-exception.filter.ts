@@ -6,6 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { DomainError } from '../../common/domain-error';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -20,7 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const message =
-      exception instanceof Error ? exception.message : 'Unknown error';
+      exception instanceof DomainError ? exception.message : 'Unknown error';
 
     response.status(httpStatus).json({
       statusCode: httpStatus,

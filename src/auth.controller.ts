@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, UseFilters } from '@nestjs/common';
-import { AuthService } from './application/service/auth.service';
-import { CreateTokenRequest } from './application/service/dto/create-token-request';
-import { HttpExceptionFilter } from './filtters/http-exception.filter';
+import { AuthService } from './auth.service';
+import { CreateTokenRequest } from './dto/create-token-request';
+import { HttpExceptionFilter } from './other/filtters/http-exception.filter';
 
 @UseFilters(new HttpExceptionFilter())
 @Controller()

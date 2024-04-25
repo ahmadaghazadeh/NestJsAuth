@@ -2,10 +2,10 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { UserIdNUllException } from './exception/userId-null.exception';
 import { UserIdInvalidException } from './exception/userId-invalid.exception';
 import { DeviceNameInvalidException } from './exception/device-name-invalid.exception';
-import { ITokenDeviceNameUserIdDuplicationChecker } from './domainService/ITokenDeviceNameUserIdDuplicationChecker';
+import { ITokenDeviceNameUserIdDuplicationChecker } from './domainService/contract/ITokenDeviceNameUserIdDuplicationChecker';
 import { DeviceNameUserIdDuplicateException } from './exception/device-name-user-id-duplicate.exception';
 import { JWTNotAllowBeNullException } from './exception/j-w-t-not-allow-be-null.exception';
-import { IJWTTokenDuplicationChecker } from './domainService/IJWTTokenDuplicationChecker';
+import { IJWTTokenDuplicationChecker } from './domainService/contract/IJWTTokenDuplicationChecker';
 import { JWTDuplicateException } from './exception/j-w-t-duplicate.exception';
 
 @Entity()

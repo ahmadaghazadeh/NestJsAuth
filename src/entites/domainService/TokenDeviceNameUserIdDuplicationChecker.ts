@@ -1,5 +1,5 @@
-import { ITokenDeviceNameUserIdDuplicationChecker } from './ITokenDeviceNameUserIdDuplicationChecker';
-import { ITokenEntityRepository } from '../../../providers/token.entity.repository.interface';
+import { ITokenDeviceNameUserIdDuplicationChecker } from './contract/ITokenDeviceNameUserIdDuplicationChecker';
+import { ITokenEntityRepository } from './token.entity.repository.interface';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()
