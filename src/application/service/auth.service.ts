@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 
-import { ITokenEntityRepository } from './repository/token.entity.repository.interface';
-import { TokenEntity } from './entity/token.entity';
-import { ITokenDeviceNameUserIdDuplicationChecker } from './entity/domainService/ITokenDeviceNameUserIdDuplicationChecker';
-import { IJWTTokenDuplicationChecker } from './entity/domainService/IJWTTokenDuplicationChecker';
+import { ITokenEntityRepository } from '../database/providers/token.entity.repository.interface';
+import { TokenEntity } from '../database/pgsql/entities/token.entity';
+import { ITokenDeviceNameUserIdDuplicationChecker } from '../database/pgsql/entities/domainService/ITokenDeviceNameUserIdDuplicationChecker';
+import { IJWTTokenDuplicationChecker } from '../database/pgsql/entities/domainService/IJWTTokenDuplicationChecker';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()

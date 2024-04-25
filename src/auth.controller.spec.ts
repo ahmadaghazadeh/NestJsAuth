@@ -1,30 +1,44 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './application/service/auth.service';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 import dataSource, { dataSourceOptions } from './db/data-source';
-import { TokenEntity } from './entity/token.entity';
+import { TokenEntity } from './application/database/pgsql/entities/token.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filtters/http-exception.filter';
-import { DataSource } from 'typeorm';
-import { ITokenEntityRepository } from './repository/token.entity.repository.interface';
-import { TokenEntityRepository } from './repository/token.entity.repository';
-import { IJWTTokenDuplicationChecker } from './entity/domainService/IJWTTokenDuplicationChecker';
-import { JWTTokenDuplicationChecker } from './entity/domainService/JWTTokenDuplicationChecker';
-import { ITokenDeviceNameUserIdDuplicationChecker } from './entity/domainService/ITokenDeviceNameUserIdDuplicationChecker';
-import { TokenDeviceNameUserIdDuplicationChecker } from './entity/domainService/TokenDeviceNameUserIdDuplicationChecker';
+import { DataSource, Repository } from 'typeorm';
+import { ITokenEntityRepository } from './application/database/providers/token.entity.repository.interface';
+import { TokenEntityRepository } from './application/database/pgsql/services/token.entity.repository';
+import { IJWTTokenDuplicationChecker } from './application/database/pgsql/entities/domainService/IJWTTokenDuplicationChecker';
+import { JWTTokenDuplicationChecker } from './application/database/pgsql/entities/domainService/JWTTokenDuplicationChecker';
+import { ITokenDeviceNameUserIdDuplicationChecker } from './application/database/pgsql/entities/domainService/ITokenDeviceNameUserIdDuplicationChecker';
+import { TokenDeviceNameUserIdDuplicationChecker } from './application/database/pgsql/entities/domainService/TokenDeviceNameUserIdDuplicationChecker';
+import { CreateTokenRequest } from './application/service/dto/create-token-request';
+import { INestApplication } from '@nestjs/common';
 
 describe('AuthController', () => {
   let authController: AuthController;
+  let tokenEntityRepository: Repository<TokenEntity>;
+  let app: INestApplication;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot(),
-        TypeOrmModule.forRoot(dataSourceOptions),
+        TypeOrmModule.forRoot({
+          type: 'postgres',
+          host: 'localhost',
+          port: 5432,
+          username: 'postgres',
+          password: 'postgres',
+          database: 'train-chat-test-database',
+          entities: [TokenEntity],
+          dropSchema: true,
+          synchronize: true,
+        }),
         TypeOrmModule.forFeature([TokenEntity]),
         JwtModule.register({
           global: true,
@@ -37,13 +51,7 @@ describe('AuthController', () => {
           provide: APP_FILTER,
           useClass: HttpExceptionFilter,
         },
-        {
-          provide: DataSource,
-          useFactory: async () => {
-            await dataSource.initialize();
-            return dataSource;
-          },
-        },
+
         { provide: ITokenEntityRepository, useClass: TokenEntityRepository },
         {
           provide: IJWTTokenDuplicationChecker,
@@ -56,11 +64,39 @@ describe('AuthController', () => {
         AuthService,
       ],
     }).compile();
-
+    app = module.createNestApplication();
+    await app.init();
     authController = app.get<AuthController>(AuthController);
+    tokenEntityRepository = app.get(getRepositoryToken(TokenEntity));
+  });
+
+  afterEach(async () => {
+    await app.close();
   });
 
   it('should be defined', () => {
     expect(authController).toBeDefined();
+  });
+
+  it('should be created a token successfully', async () => {
+    // GIVEN
+
+    const createTokenRequest = new CreateTokenRequest();
+    createTokenRequest.userId = 1;
+    createTokenRequest.deviceName = 'LG 2';
+
+    // WHEN
+    const createTokenRequestPromise =
+      await authController.createTokenAsync(createTokenRequest);
+    const expected = await tokenEntityRepository.findOne({
+      where: {
+        userId: createTokenRequest.userId,
+        deviceName: createTokenRequest.deviceName,
+      },
+    });
+
+    // THEN
+    expect(createTokenRequest.userId).toBe(expected.userId);
+    expect(createTokenRequest.deviceName).toBe(expected.deviceName);
   });
 });

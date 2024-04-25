@@ -3,10 +3,8 @@ import { TokenEntity } from './token.entity';
 import { UserIdInvalidException } from './exception/userId-invalid.exception';
 import { DeviceNameInvalidException } from './exception/device-name-invalid.exception';
 import { DeviceNameUserIdDuplicateException } from './exception/device-name-user-id-duplicate.exception';
-import {
-  JWTDuplicateException,
-  JWTNotAllowBeNullException,
-} from './exception/j-w-t-not-allow-be-null.exception';
+import { JWTNotAllowBeNullException } from './exception/j-w-t-not-allow-be-null.exception';
+import { JWTDuplicateException } from './exception/j-w-t-duplicate.exception';
 
 describe('TokenEntity', () => {
   const tokenDeviceNameUserIdDuplicationChecker = {
@@ -37,6 +35,21 @@ describe('TokenEntity', () => {
 
     // THEN
     await expect(token).rejects.toThrow(DeviceNameUserIdDuplicateException);
+  });
+
+  it('should be called the tokenDeviceNameUserIdDuplicationChecker.isDuplicate function with values', async () => {
+    // GIVEN
+    tokenDeviceNameUserIdDuplicationChecker.isDuplicate = jest.fn(() => false);
+    const userId = 5;
+    const deviceName = 'Samsung S25';
+
+    // WHEN
+    const token = await getTokenEntityPromise(userId, deviceName);
+
+    // THEN
+    expect(
+      tokenDeviceNameUserIdDuplicationChecker.isDuplicate,
+    ).toHaveBeenCalledWith(userId, deviceName);
   });
 
   describe('UserId', () => {
@@ -122,6 +135,18 @@ describe('TokenEntity', () => {
 
       // THEN
       await expect(token).rejects.toThrow(JWTDuplicateException);
+    });
+
+    it('should be called the tokenJWTDuplicationChecker with specific value', async () => {
+      // GIVEN
+      const jwt = 'asd123';
+      tokenJWTDuplicationChecker.isDuplicate = jest.fn(() => false);
+
+      // WHEN
+      const token = await getTokenEntityPromise(1, 'test', jwt);
+
+      // THEN
+      expect(tokenJWTDuplicationChecker.isDuplicate).toHaveBeenCalledWith(jwt);
     });
 
     it('should jwt retrieve', async () => {

@@ -1,5 +1,5 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { TokenEntity } from '../entity/token.entity';
+import { TokenEntity } from '../application/database/pgsql/entities/token.entity';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

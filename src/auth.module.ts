@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './application/service/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import dataSource, { dataSourceOptions } from './db/data-source';
-import { TokenEntityRepository } from './repository/token.entity.repository';
-import { JWTTokenDuplicationChecker } from './entity/domainService/JWTTokenDuplicationChecker';
-import { TokenDeviceNameUserIdDuplicationChecker } from './entity/domainService/TokenDeviceNameUserIdDuplicationChecker';
+import { TokenEntityRepository } from './application/database/pgsql/services/token.entity.repository';
+import { JWTTokenDuplicationChecker } from './application/database/pgsql/entities/domainService/JWTTokenDuplicationChecker';
+import { TokenDeviceNameUserIdDuplicationChecker } from './application/database/pgsql/entities/domainService/TokenDeviceNameUserIdDuplicationChecker';
 import { DataSource } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { ITokenEntityRepository } from './repository/token.entity.repository.interface';
-import { IJWTTokenDuplicationChecker } from './entity/domainService/IJWTTokenDuplicationChecker';
-import { ITokenDeviceNameUserIdDuplicationChecker } from './entity/domainService/ITokenDeviceNameUserIdDuplicationChecker';
-import { TokenEntity } from './entity/token.entity';
+import { ITokenEntityRepository } from './application/database/providers/token.entity.repository.interface';
+import { IJWTTokenDuplicationChecker } from './application/database/pgsql/entities/domainService/IJWTTokenDuplicationChecker';
+import { ITokenDeviceNameUserIdDuplicationChecker } from './application/database/pgsql/entities/domainService/ITokenDeviceNameUserIdDuplicationChecker';
+import { TokenEntity } from './application/database/pgsql/entities/token.entity';
 import { HttpExceptionFilter } from './filtters/http-exception.filter';
 import { APP_FILTER } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
@@ -32,13 +32,6 @@ import { jwtConstants } from './constants';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
-    },
-    {
-      provide: DataSource,
-      useFactory: async () => {
-        await dataSource.initialize();
-        return dataSource;
-      },
     },
     { provide: ITokenEntityRepository, useClass: TokenEntityRepository },
     {

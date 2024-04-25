@@ -4,11 +4,9 @@ import { UserIdInvalidException } from './exception/userId-invalid.exception';
 import { DeviceNameInvalidException } from './exception/device-name-invalid.exception';
 import { ITokenDeviceNameUserIdDuplicationChecker } from './domainService/ITokenDeviceNameUserIdDuplicationChecker';
 import { DeviceNameUserIdDuplicateException } from './exception/device-name-user-id-duplicate.exception';
-import {
-  JWTDuplicateException,
-  JWTNotAllowBeNullException,
-} from './exception/j-w-t-not-allow-be-null.exception';
+import { JWTNotAllowBeNullException } from './exception/j-w-t-not-allow-be-null.exception';
 import { IJWTTokenDuplicationChecker } from './domainService/IJWTTokenDuplicationChecker';
+import { JWTDuplicateException } from './exception/j-w-t-duplicate.exception';
 
 @Entity()
 export class TokenEntity {
