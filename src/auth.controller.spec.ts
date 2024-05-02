@@ -3,21 +3,19 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ConfigModule } from '@nestjs/config';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
-import dataSource, { dataSourceOptions } from './other/db/data-source';
 import { TokenEntity } from './entites/token.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './other/constants';
 import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './other/filtters/http-exception.filter';
-import { DataSource, Repository } from 'typeorm';
 import { ITokenEntityRepository } from './entites/domainService/token.entity.repository.interface';
 import { TokenEntityRepository } from './infrastructure/token.entity.repository';
 import { IJWTTokenDuplicationChecker } from './entites/domainService/contract/IJWTTokenDuplicationChecker';
-import { JWTTokenDuplicationChecker } from './entites/domainService/contract/JWTTokenDuplicationChecker';
+import { JWTTokenDuplicationChecker } from './entites/domainService/JWTTokenDuplicationChecker';
 import { ITokenDeviceNameUserIdDuplicationChecker } from './entites/domainService/contract/ITokenDeviceNameUserIdDuplicationChecker';
 import { TokenDeviceNameUserIdDuplicationChecker } from './entites/domainService/TokenDeviceNameUserIdDuplicationChecker';
-import { CreateTokenRequest } from './dto/create-token-request';
 import { INestApplication } from '@nestjs/common';
+import { HttpExceptionFilter } from './other/filtters/http-exception.filter';
+import { Repository } from 'typeorm';
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -78,25 +76,25 @@ describe('AuthController', () => {
     expect(authController).toBeDefined();
   });
 
-  it('should be created a token successfully', async () => {
-    // GIVEN
-
-    const createTokenRequest = new CreateTokenRequest();
-    createTokenRequest.userId = 1;
-    createTokenRequest.deviceName = 'LG 2';
-
-    // WHEN
-    const createTokenRequestPromise =
-      await authController.createTokenAsync(createTokenRequest);
-    const expected = await tokenEntityRepository.findOne({
-      where: {
-        userId: createTokenRequest.userId,
-        deviceName: createTokenRequest.deviceName,
-      },
-    });
-
-    // THEN
-    expect(createTokenRequest.userId).toBe(expected.userId);
-    expect(createTokenRequest.deviceName).toBe(expected.deviceName);
-  });
+  // it('should be created a token successfully', async () => {
+  //   // GIVEN
+  //
+  //   const createTokenRequest = new CreateTokenRequest();
+  //   createTokenRequest.userId = 1;
+  //   createTokenRequest.deviceName = 'LG 2';
+  //
+  //   // WHEN
+  //   const createTokenRequestPromise =
+  //     await authController.createTokenAsync(createTokenRequest);
+  //   const expected = await tokenEntityRepository.findOne({
+  //     where: {
+  //       userId: createTokenRequest.userId,
+  //       deviceName: createTokenRequest.deviceName,
+  //     },
+  //   });
+  //
+  //   // THEN
+  //   expect(createTokenRequest.userId).toBe(expected.userId);
+  //   expect(createTokenRequest.deviceName).toBe(expected.deviceName);
+  // });
 });

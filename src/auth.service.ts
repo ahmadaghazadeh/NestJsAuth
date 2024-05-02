@@ -5,6 +5,8 @@ import { TokenEntity } from './entites/token.entity';
 import { ITokenDeviceNameUserIdDuplicationChecker } from './entites/domainService/contract/ITokenDeviceNameUserIdDuplicationChecker';
 import { IJWTTokenDuplicationChecker } from './entites/domainService/contract/IJWTTokenDuplicationChecker';
 import { JwtService } from '@nestjs/jwt';
+import { HandleError } from './common/error-handler';
+import { Err, Ok, Result } from './common/result';
 
 @Injectable()
 export class AuthService {
@@ -29,5 +31,20 @@ export class AuthService {
       jwt,
     );
     await this.tokenRepository.saveToken(token);
+  }
+
+  async saveTokenWithoutResultError() {
+    const token = new TokenEntity();
+    await this.tokenRepository.saveTokenWithoutResultError(token);
+  }
+
+  @HandleError
+  async saveTokenWithResultError(): Promise<Result<TokenEntity>> {
+    const token = new TokenEntity();
+    const result = await this.tokenRepository.saveTokenWithResultError(token);
+    if (result.isError()) {
+      return Err(result.err);
+    }
+    return Ok(result.value);
   }
 }

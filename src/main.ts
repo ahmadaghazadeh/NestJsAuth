@@ -25,8 +25,32 @@ async function bootstrap() {
       `${swaggerCDN}/swagger-ui-standalone-preset.js`,
     ],
   });
-  app.useGlobalFilters(new HttpExceptionFilter());
+  // app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.PORT || 4000);
 }
 
 bootstrap();
+
+// import { NestFactory } from '@nestjs/core';
+// import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+// import * as path from 'path';
+// import { AuthModule } from './auth.module';
+// import { AllRpcExceptionFilter } from './other/filtters/rpc-exception.filter';
+//
+// async function bootstrap() {
+//   const app = await NestFactory.create(AuthModule);
+//
+//   app.connectMicroservice<MicroserviceOptions>({
+//     transport: Transport.GRPC,
+//     options: {
+//       url: '127.0.0.1:8001',
+//       package: 'grpc',
+//       protoPath: path.join(__dirname, './io/grpc/proto/auth.proto'),
+//     },
+//   });
+//   //app.useGlobalFilters(new RPCExceptionFilter());
+//   app.useGlobalFilters(new AllRpcExceptionFilter());
+//   await app.init();
+//   await app.startAllMicroservices();
+// }
+// bootstrap();

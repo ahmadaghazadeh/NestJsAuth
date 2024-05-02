@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package grpc;
+
+service AuthGrpcService{
+  rpc login (CreateTokenRequest) returns (CreateTokenResponse);
+}
+
+
+message CreateTokenResponse {
+  string access_token =1;
+};
+
+
+message CreateTokenRequest{
+  int32 userId = 1;
+  string deviceName =2;
+}
